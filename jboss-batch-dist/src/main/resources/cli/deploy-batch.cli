@@ -1,0 +1,2 @@
+/subsystem=batch:add(job-repository-type=in-memory)
+/subsystem=batch/thread-pool=batch:add(max-threads=30, keepalive-time={"time" => 30L,"unit" => "SECONDS"})

@@ -1,0 +1,30 @@
+#./jboss-cli.sh -c --file=configure-cli 
+
+# MODULE: org.jboss.spec.javax.batch:jboss-batch-api_1.0_spec
+module add --name=${jboss.modules}javax.batch.api\
+           --resources=jboss-batch-api_1.0_spec-${version.org.jboss.spec.javax.batch.jboss-batch-api_1.0_spec}.jar\
+           --module-xml=jboss-batch-api_1.0_spec-${version.org.jboss.spec.javax.batch.jboss-batch-api_1.0_spec}.xml
+
+# MODULE: org.jberet:jberet-core
+module add --name=${jboss.modules}org.jberet.jberet-core\
+           --resources=jberet-core-${version.org.jberet.jberet-core}.jar\
+           --module-xml=jberet-core-${version.org.jberet.jberet-core}.xml
+
+# MODULE: org.wildfly.security:wildfly-security-manager
+module add --name=${jboss.modules}org.wildfly.security.manager\
+           --resources=wildfly-security-manager-${version.org.wildfly.security.wildfly-security-manager}.jar\
+           --module-xml=wildfly-security-manager-${version.org.wildfly.security.wildfly-security-manager}.xml
+
+# MODULE: org.wildfly.jberet
+module add --name=${jboss.modules}org.wildfly.jberet\
+           --resources=jboss-batch-jberet-${project.version}.jar\
+           --module-xml=jboss-batch-jberet-${project.version}.xml
+
+# MODULE: org.wildfly.extension.batch
+module add --name=${jboss.modules}org.wildfly.extension.batch\
+           --resources=jboss-batch-extension-${project.version}.jar\
+           --module-xml=jboss-batch-extension-${project.version}.xml
+
+# DO NOT CHANGES javaee.api
+# module remove --name=${jboss.modules}javaee.api 
+# module add --name=${jboss.modules}javaee.api --module-xml=javaee-api.xml                    

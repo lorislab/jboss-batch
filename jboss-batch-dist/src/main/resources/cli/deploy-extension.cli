@@ -1,0 +1,3 @@
+# EXTENSION
+# Add extension outside the batch
+/extension=org.wildfly.extension.batch:add

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly
+    xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+    <id>cli</id>
+    <formats>
+        <format>cli</format>
+    </formats>
+
+    <includeBaseDirectory>false</includeBaseDirectory>
+
+    <dependencySets>
+        <dependencySet>
+            <includes>
+                <include>org.jboss.as.batch:jboss-batch-jberet</include>
+                <include>org.jboss.as.batch:jboss-batch-extension</include>
+                <include>org.jberet:jberet-core</include>
+                <include>org.jboss.spec.javax.batch:jboss-batch-api_1.0_spec</include>
+                <include>org.wildfly.security:wildfly-security-manager</include>
+            </includes>
+        </dependencySet>
+    </dependencySets>
+
+    <fileSets>
+        <fileSet>
+            <directory>src/main/resources/cli</directory>
+            <includes>
+                <include>*.scr</include>
+                <include>*.cli</include>
+                <include>*.md</include>
+            </includes>
+            <filtered>true</filtered>
+            <outputDirectory>/</outputDirectory>
+        </fileSet>
+    </fileSets>
+
+    <files>
+        <file>
+            <source>src/main/resources/javaee/api/main/module.xml</source>
+            <filtered>true</filtered>
+            <destName>javaee-api.xml</destName>
+        </file>        
+        <file>
+            <source>src/main/resources/javaee/api/main/module-backup.xml</source>
+            <filtered>true</filtered>
+            <destName>javaee-api-backup.xml</destName>
+        </file>        
+        <file>
+            <source>src/main/resources/javax/batch/api/main/module.xml</source>
+            <filtered>true</filtered>
+            <destName>jboss-batch-api_1.0_spec-${version.org.jboss.spec.javax.batch.jboss-batch-api_1.0_spec}.xml</destName>
+        </file>        
+        <file>
+            <source>src/main/resources/org/jberet/jberet-core/main/module.xml</source>
+            <filtered>true</filtered>
+            <destName>jberet-core-${version.org.jberet.jberet-core}.xml</destName>
+        </file>
+        <file>
+            <source>src/main/resources/org/wildfly/jberet/main/module.xml</source>
+            <filtered>true</filtered>
+            <destName>jboss-batch-jberet-${project.version}.xml</destName>
+        </file>
+        <file>
+            <source>src/main/resources/org/wildfly/security/manager/main/module.xml</source>
+            <filtered>true</filtered>
+            <destName>wildfly-security-manager-${version.org.wildfly.security.wildfly-security-manager}.xml</destName>
+        </file>
+        <file>
+            <source>src/main/resources/org/wildfly/extension/batch/main/module.xml</source>
+            <filtered>true</filtered>
+            <destName>jboss-batch-extension-${project.version}.xml</destName>
+        </file>
+    </files>
+        
+</assembly>

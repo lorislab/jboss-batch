@@ -1,0 +1,3 @@
+# EXTENSION
+/subsystem=batch/thread-pool=batch:remove
+/subsystem=batch:remove

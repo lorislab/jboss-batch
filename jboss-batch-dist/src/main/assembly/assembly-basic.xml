@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly
+    xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+    <id>basic</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+
+    <includeBaseDirectory>false</includeBaseDirectory>
+
+    <dependencySets>
+        <dependencySet>
+            <includes>
+                <include>org.jboss.as.batch:jboss-batch-jberet</include>
+            </includes>
+            <outputDirectory>modules/system/layers/base/org/wildfly/jberet/main</outputDirectory>
+        </dependencySet>
+        <dependencySet>
+            <includes>
+                <include>org.jboss.as.batch:jboss-batch-extension</include>
+            </includes>
+            <outputDirectory>modules/system/layers/base/org/wildfly/extension/batch/main</outputDirectory>
+        </dependencySet>
+        <dependencySet>
+            <includes>
+                <include>org.jberet:jberet-core</include>
+            </includes>
+            <outputDirectory>modules/system/layers/base/org/jberet/jberet-core/main</outputDirectory>
+        </dependencySet>
+        <dependencySet>
+            <includes>
+                <include>org.jboss.spec.javax.batch:jboss-batch-api_1.0_spec</include>
+            </includes>
+            <outputDirectory>modules/system/layers/base/javax/batch/api/main</outputDirectory>
+        </dependencySet>
+        <dependencySet>
+            <includes>
+                <include>org.wildfly.security:wildfly-security-manager</include>
+            </includes>
+            <outputDirectory>modules/system/layers/base/org/wildfly/security/manager/main</outputDirectory>
+        </dependencySet>
+    </dependencySets>
+
+    <fileSets>
+        <fileSet>
+            <directory>src/main/resources</directory>
+            <includes>
+                <include>org/jberet/jberet-core/main/module.xml</include>
+                <include>org/wildfly/jberet/main/module.xml</include>
+                <include>org/wildfly/extension/batch/main/module.xml</include>
+                <include>javax/batch/api/main/module.xml</include>
+                <include>org/wildfly/security/manager/main/module.xml</include>
+            </includes>
+            <filtered>true</filtered>
+            <outputDirectory>modules/system/layers/base</outputDirectory>
+        </fileSet>
+    </fileSets>
+
+    <files>
+        <file>
+            <source>src/main/resources/basic/README.md</source>
+            <filtered>true</filtered>
+        </file>
+    </files>
+
+</assembly>
