@@ -1,2 +1,2 @@
 # jboss-batch
-Wildfly fork for EAP 6.4
+Wildfly jBeret batch for EAP 6.4
