@@ -42,7 +42,7 @@
                     <dependency>
                         <groupId>org.lorislab.maven</groupId>
                         <artifactId>jboss-cli-archiver</artifactId>
-                        <version>1.0.5-SNAPSHOT</version>
+                        <version>1.0.0-SNAPSHOT</version>
                     </dependency>
                 </dependencies>                
             </plugin>
