@@ -13,8 +13,8 @@
     <dependencySets>
         <dependencySet>
             <includes>
-                <include>org.jboss.as.batch:jboss-batch-jberet</include>
-                <include>org.jboss.as.batch:jboss-batch-extension</include>
+                <include>org.lorislab.jboss.as.batch:jboss-batch-jberet</include>
+                <include>org.lorislab.jboss.as.batch:jboss-batch-extension</include>
                 <include>org.jberet:jberet-core</include>
                 <include>org.jboss.spec.javax.batch:jboss-batch-api_1.0_spec</include>
                 <include>org.wildfly.security:wildfly-security-manager</include>
