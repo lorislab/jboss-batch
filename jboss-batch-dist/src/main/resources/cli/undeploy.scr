@@ -1,9 +1,5 @@
 #./jboss-cli.sh -c --file=configure-cli 
 
-# DO NOT CHANGES javaee.api
-# module remove --name=${jboss.modules}javaee.api
-# module add --name=${jboss.modules}javaee.api --module-xml=javaee-api-backup.xml    
-
 # UNDEPLOY MODULES
 module remove --name=${jboss.modules}org.wildfly.extension.batch
 module remove --name=${jboss.modules}org.wildfly.jberet

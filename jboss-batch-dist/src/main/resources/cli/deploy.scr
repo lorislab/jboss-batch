@@ -24,7 +24,3 @@ module add --name=${jboss.modules}org.wildfly.jberet\
 module add --name=${jboss.modules}org.wildfly.extension.batch\
            --resources=jboss-batch-extension-${project.version}.jar\
            --module-xml=jboss-batch-extension-${project.version}.xml
-
-# DO NOT CHANGES javaee.api
-# module remove --name=${jboss.modules}javaee.api 
-# module add --name=${jboss.modules}javaee.api --module-xml=javaee-api.xml                    

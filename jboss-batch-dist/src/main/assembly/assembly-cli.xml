@@ -35,17 +35,7 @@
         </fileSet>
     </fileSets>
 
-    <files>
-        <file>
-            <source>src/main/resources/javaee/api/main/module.xml</source>
-            <filtered>true</filtered>
-            <destName>javaee-api.xml</destName>
-        </file>        
-        <file>
-            <source>src/main/resources/javaee/api/main/module-backup.xml</source>
-            <filtered>true</filtered>
-            <destName>javaee-api-backup.xml</destName>
-        </file>        
+    <files>      
         <file>
             <source>src/main/resources/javax/batch/api/main/module.xml</source>
             <filtered>true</filtered>
