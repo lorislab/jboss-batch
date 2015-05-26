@@ -69,7 +69,7 @@ public class BatchSubsystemDefinition extends SimpleResourceDefinition {
     static final PathElement THREAD_POOL_PATH = PathElement.pathElement(BatchConstants.THREAD_POOL, BatchConstants.THREAD_POOL_NAME);
     
     // org.jboss.as.server.deployment.Phase
-    public static final int DEPENDENCIES_BATCH                          = 0x1B00;
+    public static final int DEPENDENCIES_BATCH                          = 0x1B01; //priority after JEE_INIT
     public static final int POST_MODULE_BATCH_ENVIRONMENT               = 0x3100;
     public static final int INSTALL_BATCH_RESOURCES                     = 0x2070;
     
@@ -187,15 +187,6 @@ public class BatchSubsystemDefinition extends SimpleResourceDefinition {
 
                 }
             }, OperationContext.Stage.RUNTIME);
-            
-//            context.addStep(new AbstractDeploymentChainStep() {
-//                @Override
-//                public void execute(DeploymentProcessorTarget processorTarget) {
-//                    processorTarget.addDeploymentProcessor(BatchSubsystemDefinition.NAME,
-//                            Phase.POST_MODULE, POST_MODULE_BATCH_ENVIRONMENT, new BatchEnvironmentProcessor());
-//
-//                }
-//            }, OperationContext.Stage.RUNTIME);
             
             // Determine the repository type
             final String repositoryType = JOB_REPOSITORY_TYPE.resolveModelAttribute(context, model).asString();
