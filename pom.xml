@@ -10,7 +10,7 @@
 
     <groupId>org.lorislab.jboss.as.batch</groupId>
     <artifactId>jboss-batch</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.3</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -34,7 +34,7 @@
         <connection>scm:git:https://github.com/lorislab/jboss-batch.git</connection>
         <developerConnection>scm:git:git@github.com:lorislab/jboss-batch.git</developerConnection>
         <url>https://github.com/lorislab/jboss-batch</url>
-        <tag>HEAD</tag>
+        <tag>jboss-batch-1.0.3</tag>
     </scm>
         
     <developers>
