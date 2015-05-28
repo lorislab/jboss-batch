@@ -28,10 +28,6 @@ import org.jboss.as.controller.SubsystemRegistration;
 import org.jboss.as.controller.parsing.ExtensionParsingContext;
 
 public class BatchSubsystemExtension implements Extension {
-
-    /**
-     * Version numbers for batch subsystem management interface.
-     */
     
     /**
      * Version numbers for batch subsystem management interface.
@@ -57,11 +53,11 @@ public class BatchSubsystemExtension implements Extension {
     @Override
     public void initialize(ExtensionContext context) {
         final SubsystemRegistration subsystem = context.registerSubsystem(BatchSubsystemDefinition.NAME,
-                MANAGEMENT_API_MAJOR_VERSION, MANAGEMENT_API_MINOR_VERSION, MANAGEMENT_API_MICRO_VERSION);
-        
-        // Wildfly 9
+                MANAGEMENT_API_MAJOR_VERSION, MANAGEMENT_API_MINOR_VERSION, MANAGEMENT_API_MICRO_VERSION);        
+
+//        Wildfly 9
 //        final SubsystemRegistration subsystem = context.registerSubsystem(BatchSubsystemDefinition.NAME, CURRENT_MODEL_VERSION);
-        
+
         subsystem.registerSubsystemModel(BatchSubsystemDefinition.INSTANCE);
         subsystem.registerXMLElementWriter(BatchSubsystemParser.INSTANCE);
         

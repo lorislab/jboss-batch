@@ -44,6 +44,11 @@ public class BatchDeploymentResourceProcessor implements DeploymentUnitProcessor
     @Override
     public void deploy(final DeploymentPhaseContext phaseContext) throws DeploymentUnitProcessingException {
         final DeploymentUnit deploymentUnit = phaseContext.getDeploymentUnit();
+        
+        if (!BatchDeploymentMarker.isBatchDeployment(deploymentUnit)) {
+            return; // Skip if there are no batchs files in the deployment
+        }
+        
         if (deploymentUnit.hasAttachment(Attachments.MODULE) && !DeploymentTypeMarker.isType(DeploymentType.EAR, deploymentUnit) && deploymentUnit.hasAttachment(Attachments.DEPLOYMENT_ROOT)) {
             BatchLogger.LOGGER.tracef("Processing deployment '%s' for the batch deployment resources.", deploymentUnit.getName());
             // Get the class loader

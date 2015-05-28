@@ -19,10 +19,8 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-
 package org.wildfly.extension.batch.deployment;
 
-import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.transaction.TransactionManager;
@@ -30,20 +28,16 @@ import javax.transaction.TransactionManager;
 import org.jberet.spi.BatchEnvironment;
 import org.jberet.spi.JobXmlResolver;
 import org.jboss.as.ee.component.EEModuleDescription;
-import org.jboss.as.ee.structure.DeploymentType;
-import org.jboss.as.ee.structure.DeploymentTypeMarker;
-import org.jboss.as.server.deployment.AttachmentKey;
 import org.jboss.as.server.deployment.Attachments;
 import org.jboss.as.server.deployment.DeploymentPhaseContext;
 import org.jboss.as.server.deployment.DeploymentUnit;
 import org.jboss.as.server.deployment.DeploymentUnitProcessingException;
 import org.jboss.as.server.deployment.DeploymentUnitProcessor;
 import org.jboss.as.txn.service.TxnServices;
+import org.jboss.as.weld.WeldDeploymentMarker;
 import org.jboss.modules.Module;
 import org.jboss.msc.service.ServiceBuilder;
 import org.jboss.msc.service.ServiceTarget;
-import org.jboss.vfs.VirtualFile;
-import org.jboss.vfs.VirtualFileFilter;
 import org.wildfly.extension.batch.BatchServiceNames;
 import org.wildfly.extension.batch._private.BatchLogger;
 import org.wildfly.extension.batch.job.repository.JobRepositoryFactory;
@@ -54,13 +48,19 @@ import org.wildfly.jberet.services.BatchEnvironmentService;
  */
 public class BatchEnvironmentProcessor implements DeploymentUnitProcessor {
 
-    private static final AttachmentKey<Boolean> MARKER = AttachmentKey.create(Boolean.class);
-    
     @Override
     public void deploy(final DeploymentPhaseContext phaseContext) throws DeploymentUnitProcessingException {
         final DeploymentUnit deploymentUnit = phaseContext.getDeploymentUnit();
+
+        if (!BatchDeploymentMarker.isBatchDeployment(deploymentUnit)) {
+            return; // Skip if there are no batchs files in the deployment
+        }
+
+        final ExplicitBatchArchiveMetadataContainer explicitBatchArchiveMetadata = deploymentUnit.getAttachment(ExplicitBatchArchiveMetadataContainer.ATTACHMENT_KEY);
+
         if (deploymentUnit.hasAttachment(Attachments.MODULE)) {
             BatchLogger.LOGGER.tracef("Processing deployment '%s' for the batch environment.", deploymentUnit.getName());
+
             // Get the class loader
             final Module module = deploymentUnit.getAttachment(Attachments.MODULE);
             final ClassLoader moduleClassLoader = module.getClassLoader();
@@ -75,53 +75,31 @@ public class BatchEnvironmentProcessor implements DeploymentUnitProcessor {
             // Register the required services
             serviceBuilder.addDependency(BatchServiceNames.BATCH_THREAD_POOL_NAME, ExecutorService.class, service.getExecutorServiceInjector());
             serviceBuilder.addDependency(TxnServices.JBOSS_TXN_TRANSACTION_MANAGER, TransactionManager.class, service.getTransactionManagerInjector());
+
+            // create the job xml resolver
+            ExplicitBatchArchiveMetadata metadata = explicitBatchArchiveMetadata.getBatchArchiveMetadata();
+            JobXmlResolverService jobXmlResolverService = new JobXmlResolverService(moduleClassLoader, metadata.getJobFiles());
             
-            // Get the root file
-            final VirtualFile root = deploymentUnit.getAttachment(Attachments.DEPLOYMENT_ROOT).getRoot();
-            VirtualFile jobsDir;
-            // Only files in the META-INF/batch-jobs directory
-            if (DeploymentTypeMarker.isType(DeploymentType.WAR, deploymentUnit)) {
-                jobsDir = root.getChild("WEB-INF/classes/META-INF/batch-jobs");
-            } else {
-                jobsDir = root.getChild("META-INF/batch-jobs");
+            if (WeldDeploymentMarker.isPartOfWeldDeployment(deploymentUnit)) {
+                // Register the bean manager if this is a CDI deployment
+                BatchLogger.LOGGER.tracef("Adding BeanManager service dependency for deployment %s", deploymentUnit.getName());
+                serviceBuilder.addDependency(BatchServiceNames.beanManagerServiceName(deploymentUnit), BeanManager.class, service.getBeanManagerInjector());
             }
-            final JobXmlResolverService jobXmlResolverService;
-            if (jobsDir != null && jobsDir.exists() && !jobsDir.getChildren().isEmpty()) {
-                try {
-                    // Create the job XML resolver service with the files allowed to be used
-                    jobXmlResolverService = new JobXmlResolverService(moduleClassLoader, jobsDir.getChildren(JobXmlFilter.INSTANCE));
-                    
-                    // Register the bean manager if this is a CDI deployment
-                    BatchLogger.LOGGER.tracef("Adding BeanManager service dependency for deployment %s", deploymentUnit.getName());
-                    serviceBuilder.addDependency(BatchServiceNames.beanManagerServiceName(deploymentUnit), BeanManager.class, service.getBeanManagerInjector());                    
-                } catch (IOException e) {
-                    throw BatchLogger.LOGGER.errorProcessingBatchJobsDir(e);
-                }
-            } else {
-                // This is likely not a batch deployment, creates a no-op service
-                jobXmlResolverService = new JobXmlResolverService();
-            }
+            
             // Install the job XML resolver service
             serviceTarget.addService(BatchServiceNames.jobXmlResolverServiceName(deploymentUnit), jobXmlResolverService).install();
             // Add a dependency to the job XML resolver service
             serviceBuilder.addDependency(BatchServiceNames.jobXmlResolverServiceName(deploymentUnit), JobXmlResolver.class, service.getJobXmlResolverInjector());
 
             serviceBuilder.install();
+            
+            BatchLogger.LOGGER.activatingBatchExtension(deploymentUnit.getName());            
         }
     }
 
     @Override
     public void undeploy(DeploymentUnit context) {
     }
-    
-    private static class JobXmlFilter implements VirtualFileFilter {
 
-        static final JobXmlFilter INSTANCE = new JobXmlFilter();
 
-        @Override
-        public boolean accepts(final VirtualFile file) {
-            return file.isFile() && file.getName().endsWith(".xml");
-        }
-    }
-    
 }

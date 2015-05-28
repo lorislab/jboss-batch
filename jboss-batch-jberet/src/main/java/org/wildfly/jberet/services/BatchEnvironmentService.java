@@ -28,6 +28,7 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.transaction.TransactionManager;
 
 import org.jberet.repository.JobRepository;
+import org.jberet.repository.JobRepositoryFactory;
 import org.jberet.spi.ArtifactFactory;
 import org.jberet.spi.BatchEnvironment;
 import org.jberet.spi.JobXmlResolver;

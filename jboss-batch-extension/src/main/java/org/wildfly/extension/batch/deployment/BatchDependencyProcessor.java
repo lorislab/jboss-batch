@@ -49,6 +49,11 @@ public class BatchDependencyProcessor implements DeploymentUnitProcessor {
     public void deploy(final DeploymentPhaseContext phaseContext) throws DeploymentUnitProcessingException {
         final DeploymentUnit deploymentUnit = phaseContext.getDeploymentUnit();
         final ModuleSpecification moduleSpecification = deploymentUnit.getAttachment(Attachments.MODULE_SPECIFICATION);
+        
+        if (!BatchDeploymentMarker.isBatchDeployment(deploymentUnit)) {
+            return; // Skip if there are no batchs files in the deployment
+        }
+        
         final ModuleLoader moduleLoader = Module.getBootModuleLoader();
 
         moduleSpecification.addSystemDependency(new ModuleDependency(moduleLoader, batchModule, false, false, false, false));

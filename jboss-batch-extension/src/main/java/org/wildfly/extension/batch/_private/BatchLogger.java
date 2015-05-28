@@ -109,4 +109,11 @@ public interface BatchLogger extends BasicLogger {
     @Message(id = 7, value = "Failed processing the job XML file %s. Attempting to execute this job may result in errors.")
     void invalidJobXmlFile(String jobXmlFile);
 
+    @LogMessage(level = Level.INFO)
+    @Message(id = 10, value = "Starting Batch Extension")
+    void startingBatchExtension();   
+    
+    @LogMessage(level = Level.INFO)
+    @Message(id = 11, value = "Activating Batch Extension for  %s module.")
+    void activatingBatchExtension(String module);      
 }
